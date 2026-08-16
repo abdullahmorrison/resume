@@ -2,21 +2,24 @@
 
 LaTeX source for my resume. The PDF is built in CI — never committed.
 
+**[View the current resume](https://abdullahmorrison.github.io/resume/)**
+
 ## How it works
 
-Push to `main` → GitHub Actions compiles `resume.tex` → the PDF is published as a
-release asset on a rolling `latest` tag:
+Push to `main` → GitHub Actions lints, compiles `resume.tex`, and publishes the
+PDF two ways:
 
-```
-https://github.com/abdullahmorrison/resume/releases/latest/download/resume.pdf
-```
+| Where | URL | Notes |
+| --- | --- | --- |
+| GitHub Pages | `https://abdullahmorrison.github.io/resume/resume.pdf` | Served as `application/pdf`, so it opens in the browser |
+| Release asset | `https://github.com/abdullahmorrison/resume/releases/latest/download/resume.pdf` | Rolling `latest` tag; always downloads |
 
-That URL is stable, so [abdullahmorrison.com](https://abdullahmorrison.com) serves
-`/resume.pdf` by proxying to it. Editing the resume needs no website commit and no
-website rebuild — push here and the live resume updates.
+Link people to the Pages URL. Release assets are sent with
+`Content-Disposition: attachment`, so browsers download them instead of rendering
+them — useful as a stable archive, not for viewing.
 
-Every run also uploads the PDF as a workflow artifact, so you can download the
-current build straight from the Actions tab.
+Every run also uploads the PDF as a workflow artifact, downloadable from the
+Actions tab.
 
 ## Linting and formatting
 
@@ -36,12 +39,12 @@ the `Makefile`.
 
 ## Editing
 
-There is no local LaTeX toolchain on my machine, so CI is the build. To compile
-locally you'd need TeX Live:
+CI is the build; no local LaTeX toolchain is required. To compile locally you'd
+need TeX Live:
 
 ```sh
 sudo apt install texlive-full   # large; texlive-latex-extra + fonts-texgyre may suffice
-pdflatex resume.tex
+make pdf
 ```
 
 Required packages: `geometry`, `tgpagella`, `fontawesome`, `enumitem`, `hyperref`,
