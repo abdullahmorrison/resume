@@ -8,6 +8,13 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+# Pages allows only one concurrent deployment.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   # Runs the exact same make targets you run locally, so CI and local cannot drift.
@@ -53,3 +60,47 @@ jobs:
           name: Latest resume
           files: resume.pdf
           fail_on_unmatched_files: true
+
+  # Release assets are sent with "Content-Disposition: attachment", so browsers
+  # always download them. Pages serves the PDF as application/pdf with no such
+  # header, so it renders inline -- this is the URL to link people to.
+  pages:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download PDF from build
+        uses: actions/download-artifact@v4
+        with:
+          name: resume
+          path: site
+
+      - name: Add index redirect
+        run: |
+          cat > site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Abdullah Morrison — Resume</title>
+          <meta http-equiv="refresh" content="0; url=resume.pdf">
+          <link rel="canonical" href="resume.pdf">
+          </head>
+          <body>
+          <p><a href="resume.pdf">View resume</a></p>
+          </body>
+          </html>
+          HTML
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
