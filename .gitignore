@@ -1,0 +1,13 @@
+# LaTeX build output — the PDF is built in CI and published as a release asset
+*.pdf
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.bbl
+*.blg

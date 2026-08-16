@@ -1,0 +1,130 @@
+\documentclass[letterpaper]{article}
+% \documentclass[10pt,a4paper]{article}
+
+\usepackage[top=0.4in,bottom=0.4in,left=0.5in,right=0.5in]{geometry} % set page margins
+
+% \usepackage{charter}
+\usepackage{tgpagella}
+
+\usepackage{fontawesome}
+\usepackage[T1]{fontenc} % font encoding
+\usepackage[utf8]{inputenc} % input encoding
+
+\usepackage{enumitem} % enable lists for bullet points: itemize and \item
+
+\usepackage[hidelinks]{hyperref} % format hyperlinks
+
+\usepackage{titlesec} % enable section title customization
+
+\raggedright % disable text justification
+
+\pagestyle{empty} % disable page numbering
+
+% ensure that the PDF output will be all unicode and machine-readable
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+% format section headings: bolding, size, white space above/below
+\titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule\vspace{-6.5pt}]
+
+% format bullet points: size, white space above/below, white space between bullets
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
+\setlist[itemize]{itemsep=-2pt, leftmargin=12pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Resume Start
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\centerline{\Huge Abdullah Morrison}
+
+\vspace{5pt}
+
+\centerline{\href{mailto:abdullahmorrison@gmail.com}{\faEnvelope \hspace{0.5mm} abdullahmorrison@gmail.com} |  \href{https://abdullahmorrison.com}{\faGlobe \hspace{0.5mm} abdullahmorrison.com} |  \href{https://github.com/abdullahmorrison}{\faGithub \hspace{0.5mm } github.com/abdullahmorrison}}
+
+\vspace{-10pt}
+\section{Summary}
+Full-stack software engineer based in Seattle. Experienced in building scalable web applications using React, TypeScript, and Node.js.
+
+\vspace{-10pt}
+\section{Skills}
+\textbf{Languages:} TypeScript/JavaScript, C\#, Java, Python, PHP, Lua, HTML, CSS/SASS \\
+\textbf{Frameworks \& Libraries:} React, Next.js, Vue, React Native, Tailwind, jQuery, Jest\\
+\textbf{Infrastructure \& Tools:} Docker, AWS, Terraform, Git, Linux \\
+\textbf{Databases \& APIs:} MongoDB, MySQL, PostgreSQL, GraphQL/Apollo, tRPC
+
+\vspace{-6.5pt}
+\section{Experience}
+\textbf{Software Development Engineer I,} Expedia Group \hfill Jan. 2026 -- Present \\
+\vspace{-5pt}
+\begin{itemize}
+    \item Developing features for an internal Backstage developer platform (\textbf{React, Node.js, TypeScript}) that simplify project creation and service management, accelerating onboarding and enabling teams to ship changes faster.
+\end{itemize}
+
+
+\textbf{Fullstack Developer,}
+\href{https://www.alveussanctuary.org/}{Alveus Sanctuary} \hfill Dec. 2022 -- May 2023 \\
+\vspace{-7.5pt}
+\begin{itemize}
+    \item Built an interactive livestream overlay that educated \textasciitilde{}\textbf{7000} weekly viewers about animal conservation using \textbf{React, TypeScript, NodeJS,} and \textbf{MongoDB.}
+    \item Developed a real-time chatbot overlay controller using \textbf{TypeScript} and \textbf{NodeJS.}
+    \item Led a 6-person open-source team, contributing features via pull requests.
+    \item Developed a prototype to propose to the CEO before joining the company.
+\end{itemize}
+
+\textbf{Software Engineer,}
+\href{https://www.microsoft.com}{Microsoft} \hfill May 2022 -- Aug. 2022 \\
+\vspace{-5pt}
+\begin{itemize}
+    \item Reduced the steps to assign a build failure to a teammate by \textasciitilde{}\textbf{40\%} by developing a Microsoft Teams message bot command to automate the process using \textbf{C\#}.
+    \item Created a plugin in Microsoft Teams that displays who may be responsible for a build failure in a drop-down using \textbf{C\#}.
+    \item Modernized and refactored frontend components for an internal tests website using \textbf{VueJS}.
+\end{itemize}
+
+\textbf{Web Developer,}
+\href{https://76engage.com/}{76Engage} \hfill Sept. 2021 -- Dec. 2021 \\
+\vspace{-5pt}
+\begin{itemize}
+    \item Built a plugin that streamlined adding and searching images on Drupal sites, using \textbf{VueJS} and \textbf{Docker}.
+    \item Improved onboarding documentation and reorganized technical resources.
+\end{itemize}
+
+\textbf{Web Developer,}
+\href{https://digitalmainstreet.ca/}{Digital Main Street} \hfill Jan. 2021 -- Mar. 2021 \\
+\vspace{-5pt}
+\begin{itemize}
+    \item Improved the sales of 12 small businesses by redesigning their website’s UI and backend to make it easier for customers to make a purchase using \textbf{Shopify, WordPress, SquareUp, Wix, Squarespace}, and \textbf{wireframes}.
+    \item Collaborated with 2 digital marketers to integrate digital marketing tools like Facebook pixel onto websites, a copywriter to improve the quality of copy on websites, and a graphic designer to add graphics to the websites.
+\end{itemize}
+
+\textbf{Software Engineer,}
+\href{https://www.uottawa.ca}{University of Ottawa} \hfill Jun. 2020 -- Aug. 2020 \\
+\vspace{-5pt}
+\begin{itemize}
+    \item Helped uOttawa sports staff more easily access uOttawa athlete data by developing a website to display that data using \textbf{PHP, JavaScript,} and \textbf{MySQL.}
+    \item Designed the database through an entity-relationship diagram and the frontend with wireframes.
+\end{itemize}
+
+\vspace{-7.5pt}
+\section{Projects}
+\textbf{Motivation Scale} \hfill \href{https://motivationscale.com}{motivationscale.com} \href{https://github.com/abdullahmorrison/twitch-chatbot} | \href{https://github.com/abdullahmorrison/motivation-scale}{github.com/abdullahmorrison/motivation-scale} \\
+
+\vspace{-5pt}
+\begin{itemize}
+    \item A website and mobile app that helps users track how their goals affect their emotions. Made with \textbf{NextJS, TypeScript, MongoDB, GraphQL/Apollo, Docker, NodeJS, Jest, SCSS} and \textbf{React Native.}
+\end{itemize}
+\textbf{Live Streamer Twitch Extension} \hfill \href{https://github.com/abdullahmorrison/erobb221-twitch-extension}{github.com/abdullahmorrison/erobb221-twitch-extension} \\
+
+\vspace{-5pt}
+\begin{itemize}
+    \item Increased the revenue of a live streamer via an improvement in his viewer engagement by developing an interface that overlays over his broadcast and lets users play a mini-game related to the stream using \textbf{React} and \textbf{TypeScript.}
+    \item Implemented a Twitch chatbot that triggers the overlay to let viewers throw virtual tomatoes at the screen for 30 seconds.
+\end{itemize}
+
+\vspace{-7.5pt}
+\section{Education \& Certifications}
+\textbf{\href{https://www.uottawa.ca}{University of Ottawa}} -- \href{https://1drv.ms/b/s!AqCqUgZCz_Syg4xQ3hZgNf2SuSkbxQ?e=zdgV0F}{Honours Bachelor of Science in Computer Science} \hfill 2018 -- 2023 \newline
+\textbf{AWS Cloud Practitioner Certification} -- \href{https://www.credly.com/badges/4290f058-e6aa-484e-924a-f2e20db8627a/public_url}{CLF-C02} \hfill 2024 \\
+\textbf{AWS Solutions Architect Associate Certification} -- SAA-C03 \hfill In-progress\\
+\textbf{Terraform Associate Certification} -- 003 \hfill In-progress
+\end{document}
