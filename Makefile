@@ -21,7 +21,10 @@ export PATH := $(BIN):$(PATH)
 lint:
 	@command -v chktex >/dev/null || { \
 	  echo "chktex not found -- install it with: sudo apt install chktex"; exit 1; }
-	@out=$$(chktex $(CHKTEX_FLAGS) $(TEX) 2>&1); \
+	@# chktex always exits 0, so findings are detected by output instead. -q drops
+	@# the copyright banner and summary; findings go to stdout, and stderr only
+	@# carries notices such as the unresolvable \input{glyphtounicode}.
+	@out=$$(chktex $(CHKTEX_FLAGS) -q $(TEX) 2>/dev/null); \
 	if [ -n "$$out" ]; then printf '%s\n' "$$out"; echo "==> chktex found issues"; exit 1; fi; \
 	echo "==> chktex: clean"
 
