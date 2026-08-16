@@ -1,6 +1,9 @@
 # LaTeX build output — the PDF is built in CI and published as a release asset
 *.pdf
 
+# Locally fetched tooling (make tools)
+/bin/
+
 # LaTeX auxiliary files
 *.aux
 *.log

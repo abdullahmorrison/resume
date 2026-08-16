@@ -1,0 +1,7 @@
+# Indentation only -- no line wrapping.
+#
+# The \href URLs here are longer than any sane wrap length and tex-fmt cannot
+# break them, so wrapping only produces "line cannot be wrapped" noise. Leaving
+# it off also keeps prose edits from reflowing whole paragraphs into large diffs.
+wrap = false
+tabsize = 4
