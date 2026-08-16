@@ -6,9 +6,12 @@ TEX_FMT_VERSION := v0.5.7
 #    1  command terminated with space  -- "\faEnvelope \hspace{...}" is deliberate
 #    8  wrong length of dash           -- "2018 -- 2023" date ranges are intentional
 #   13  intersentence spacing (\@)     -- noisy on resume sentence fragments
+#   27  could not execute LaTeX command -- standalone chktex has no TeX Live
+#                                        search path, so it cannot resolve
+#                                        \input{glyphtounicode}; pdflatex can
 #   36  space in front of parenthesis
 #   46  use \( \) instead of $ $       -- \labelitemi uses $\vcenter{...}$
-CHKTEX_FLAGS := -n1 -n8 -n13 -n36 -n46
+CHKTEX_FLAGS := -n1 -n8 -n13 -n27 -n36 -n46
 
 export PATH := $(BIN):$(PATH)
 
