@@ -1,8 +1,17 @@
 name: build
 
 on:
+  # Publishing happens on push to main, so it is limited to changes that can
+  # actually alter the PDF. Without this, a README edit republishes a
+  # byte-identical resume and churns the release timestamp.
   push:
     branches: [main]
+    paths:
+      - 'resume.tex'
+      - '.github/workflows/build.yml'
+  # Deliberately unfiltered: every PR must report lint and build, since the
+  # ruleset requires both. A filtered PR trigger would leave a docs-only PR
+  # waiting forever on checks that never run.
   pull_request:
   workflow_dispatch:
 
