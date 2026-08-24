@@ -19,6 +19,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  pull-requests: write
 
 # Pages allows only one concurrent deployment.
 concurrency:
@@ -69,6 +70,109 @@ jobs:
           name: Latest resume
           files: resume.pdf
           fail_on_unmatched_files: true
+
+  # Renders the compiled PDF and posts it into the PR, so the document gets
+  # reviewed instead of the .tex diff. A comment can only display an image it can
+  # fetch over HTTP, so the renders are committed to an orphan "pdf-preview"
+  # branch -- it shares no history with main and holds nothing but one directory
+  # of images per PR.
+  preview:
+    needs: build
+    # Fork PRs get a read-only token and cannot push the branch, so they skip
+    # this rather than failing the run.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+      SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      # A docs-only PR still runs lint and build, but has no new PDF worth
+      # showing -- a preview there would just repeat what is already on main.
+      - name: Check whether this PR touches the resume
+        id: touched
+        run: |
+          if gh api --paginate \
+               "repos/${{ github.repository }}/pulls/$PR/files" \
+               --jq '.[].filename' | grep -qx 'resume.tex'; then
+            echo "resume=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "resume=false" >> "$GITHUB_OUTPUT"
+            echo "resume.tex is untouched -- skipping the preview."
+          fi
+
+      - name: Download PDF from build
+        if: steps.touched.outputs.resume == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: resume
+
+      - name: Render every page to PNG
+        if: steps.touched.outputs.resume == 'true'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+          mkdir -p out
+          # 150 dpi keeps a letter page legible in a comment at a sane file size.
+          pdftoppm -png -r 150 resume.pdf out/page
+          cp resume.pdf out/
+          ls -l out
+
+      - name: Publish the renders to the pdf-preview branch
+        if: steps.touched.outputs.resume == 'true'
+        run: |
+          work=$(mktemp -d)
+          git -C "$work" init -q
+          git -C "$work" remote add origin \
+            "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          if git -C "$work" fetch -q --depth 1 origin pdf-preview 2>/dev/null; then
+            git -C "$work" checkout -q -b pdf-preview FETCH_HEAD
+          else
+            git -C "$work" checkout -q --orphan pdf-preview
+          fi
+          rm -rf "$work/pr-$PR"
+          mkdir -p "$work/pr-$PR"
+          cp out/* "$work/pr-$PR/"
+          git -C "$work" config user.name "github-actions[bot]"
+          git -C "$work" config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$work" add -A
+          # The branch is kept at a single commit: every push amends it. Other
+          # PRs' directories ride along in the tree, so images stay available
+          # while superseded renders never accumulate in history.
+          git -C "$work" commit -q --amend -m "PDF previews" 2>/dev/null \
+            || git -C "$work" commit -q -m "PDF previews"
+          git -C "$work" push -q --force origin pdf-preview
+
+      - name: Post or update the preview comment
+        if: steps.touched.outputs.resume == 'true'
+        run: |
+          repo="${{ github.repository }}"
+          raw="https://raw.githubusercontent.com/$repo/pdf-preview/pr-$PR"
+          {
+            echo "<!-- resume-preview -->"
+            echo "**Resume preview** — \`${SHA:0:7}\`"
+            echo
+            for png in out/page-*.png; do
+              # ?v= busts GitHub's image proxy cache, which otherwise keeps
+              # serving the render from the previous push.
+              echo "![$(basename "$png" .png)]($raw/$(basename "$png")?v=$SHA)"
+              echo
+            done
+            echo "[Open the PDF](https://github.com/$repo/blob/pdf-preview/pr-$PR/resume.pdf)"
+          } > body.md
+          # One sticky comment per PR, found by the marker on its first line.
+          id=$(gh api --paginate "repos/$repo/issues/$PR/comments" \
+                 --jq '.[] | select(.body | startswith("<!-- resume-preview -->")) | .id' \
+               | head -n1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$repo/issues/comments/$id" -F body=@body.md >/dev/null
+            echo "Updated comment $id"
+          else
+            gh api -X POST "repos/$repo/issues/$PR/comments" -F body=@body.md >/dev/null
+            echo "Posted a new comment"
+          fi
 
   # Release assets are sent with "Content-Disposition: attachment", so browsers
   # always download them. Pages serves the PDF as application/pdf with no such
