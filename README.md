@@ -21,6 +21,13 @@ them — useful as a stable archive, not for viewing.
 Every run also uploads the PDF as a workflow artifact, downloadable from the
 Actions tab.
 
+## Pull request previews
+
+A PR that touches `resume.tex` gets a comment showing the compiled resume as an
+image, one per page, updated on every push. The renders live on the orphan
+`pdf-preview` branch under `pr-<number>/`, since a comment can only display an
+image it can fetch over HTTP. Nothing is published until the PR merges.
+
 ## Linting and formatting
 
 CI runs the same `make` targets you run locally, so the two can't drift.
